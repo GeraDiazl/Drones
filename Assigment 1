@@ -1,0 +1,67 @@
+********************************************************************************************************************************
+This first part starts and states the requirements for the drone to take off as well as the specifics of the takeoff.
+********************************************************************************************************************************
+from dronekit import connect, VehicleMode, LocationGlobalRelative
+import time
+
+def arm_and_takeoff(TargetAltitude)
+	print ("Excecuting Takeoff")
+
+	while not drone.is_armable:
+		print("Vehicle is not armable, waiting....")
+		time.sleep(1)
+	print("ready to arm")
+	drone.mode = VehicleMode("GUIDED")
+	drone.armed = True
+
+	while not drone.armed:
+		print("Waiting for arming")
+		time.sleep(1)
+
+	print("Ready for takeoff, taking off")
+	drone.simple_takeoff(TargetAltitude)
+
+	while True:
+		Altitude = drone.location.global_relative_frame.alt
+		print("Altitude: ", Altitude)
+		time.sleep(1)
+
+		if Altitude >= TargetAltitude * 0.95:
+			print("Altitude reached")
+			break
+
+#Vehicle Connection
+drone = connect ('127.0.0.1:14551', wait_ready=True)
+arm_and_takeoff(20)
+********************************************************************************************************************************
+This next part is to define the speed on which the drone will fly and and the coordinates. As well as the commands to make it fly
+there. following that the drone goes back to the takeoff point and prints the battery level.
+********************************************************************************************************************************
+drone.airspeed = 10
+point1 = LocationGlobalRelative(20.737721, -103.457004)
+point2 = LocationGlobalRelative(20.737688, -103.456534)
+point3 = LocationGlobalRelative(20.736698, -103.456635)
+point4 = LocationGlobalRelative(20.736733, -103.457099)
+
+print("Takoff was succesful")
+print("Setting course to point 1")
+
+drone.simple_goto(point1)
+time.sleep(20)
+print("Point 1 reached succcessfully, setting course to point 2")
+
+drone.simple_goto(point2)
+time.sleep(20)
+print("Point 2 reached successfully, setting course to point 3")
+
+drone.simple_goto(point3)
+times.sleep(20)
+print("Point 3 reached successfully, setting course to point 4")
+
+drone.simple_goto(point4)
+time.sleep(20)
+print("Point 4 reached successfully, going back to takeoff")
+
+drone.mode = VehicleMode("RTL")
+print("Trip was successful")
+print("Battery:" + drone.battery)
